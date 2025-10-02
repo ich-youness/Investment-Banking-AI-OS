@@ -74,9 +74,10 @@ This module contains 4 specialized agents that work together to create a compreh
 - Generates insights and visualizations
 - Provides cleaned datasets for modeling
 
-## Tools
+## Tools by Agent
 
-### Built-in Tools
+### 🔹 Ingest-Agent Tools
+**Built-in Tools:**
 - **DuckDuckGoTools**: Web data fetching and search capabilities
 - **YFinanceTools**: Stock and market data collection
 - **FinancialDatasetsTools**: Macroeconomic and sector data access
@@ -84,17 +85,40 @@ This module contains 4 specialized agents that work together to create a compreh
 - **PandasTools**: Data manipulation and analysis
 - **DuckDbTools**: SQL queries on local datasets
 - **FileTools**: File system operations and management
+
+**Custom Tools:**
+- **Financial Data Normalization**: Currency and date standardization algorithms
+- **Data Quality Validators**: Custom validation rules and quality checks
+
+### 🔹 OCR-Agent Tools
+**Built-in Tools:**
 - **OpenCVTools**: Image processing and OCR preprocessing
+- **FileTools**: File system operations and management
 - **PythonTools**: Custom algorithms and integrations
+
+**Custom Tools:**
+- **Document Processing Pipeline**: Custom OCR and text extraction workflows
+- **Image Enhancement Algorithms**: Noise removal and document alignment
+
+### 🔹 NLP-Extractor-Agent Tools
+**Built-in Tools:**
 - **KnowledgeTools**: Entity extraction and text analysis
 - **ReasoningTools**: Logical structure analysis
+- **PythonTools**: Custom algorithms and integrations
+
+**Custom Tools:**
+- **Entity Recognition Models**: Custom NER for financial and legal entities
+- **Financial Text Parser**: Specialized financial document parsing
+
+### 🔹 Feature-Agent Tools
+**Built-in Tools:**
+- **PandasTools**: Data manipulation and analysis
+- **DuckDbTools**: SQL queries on local datasets
 - **VisualizationTools**: Data visualization and charting
 
-### Custom Tools
-- **Document Processing Pipeline**: Custom OCR and text extraction workflows
-- **Financial Data Normalization**: Currency and date standardization algorithms
-- **Entity Recognition Models**: Custom NER for financial and legal entities
-- **Data Quality Validators**: Custom validation rules and quality checks
+**Custom Tools:**
+- **Feature Engineering Pipeline**: Custom feature transformation algorithms
+- **Statistical Analysis Suite**: Advanced statistical analysis and modeling
 
 ## Knowledge Base
 - **Financial Data Standards**: Industry-standard data formats and schemas

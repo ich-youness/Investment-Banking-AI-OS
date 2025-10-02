@@ -8,9 +8,9 @@ from agno.tools.knowledge import KnowledgeTools
 from agno.tools.file import FileTools
 from agno.tools.python import PythonTools
 from agno.tools.reasoning import ReasoningTools
-# from agno.tools.financial_datasets import FinancialDatasetsTools
 from agno.tools.opencv import OpenCVTools
-# from agno.tools.powerpoint import PowerPointTools  # May not be available in current version
+from agno.tools.calculator import CalculatorTools
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -63,7 +63,8 @@ def create_MA_Analyst_agent():
             DuckDbTools(),           # SQL queries for financial data
             VisualizationTools(),    # Charts for valuation outputs
             # KnowledgeTools(),        # Apply finance domain knowledge
-            FileTools()              # Export valuation models
+            FileTools(),              # Export valuation models
+            CalculatorTools()
         ],
     )
 
@@ -236,16 +237,27 @@ Valuation_Scenario_agent = create_Valuation_Scenario_agent()
 Pitchbook_agent = create_Pitchbook_agent()
 
 # Test prompts for each agent
-ma_analyst_test_prompt = """
-Build a DCF valuation model for Company CIH:
-- Project 5-year cash flows with 8% revenue growth
-- Calculate terminal value using 3% terminal growth rate
-- Use 10% WACC as discount rate
-- Perform sensitivity analysis on growth rates and WACC
-- Generate valuation range and visualization charts
-"""
+# ma_analyst_test_prompt = """
+# Build a DCF valuation model for Company CIH:
+# - Project 5-year cash flows with 8% revenue growth
+# - Calculate terminal value using 3% terminal growth rate
+# - Use 10% WACC as discount rate
+# - Perform sensitivity analysis on growth rates and WACC
+# - Generate valuation range and visualization charts
+# """
+ma_analyst_test_prompt = """I have uploaded a CSV file called `D:/Banking-Investment-OS/Backend/Inputs/sample_cash_flow_statement.csv` which contains a company's cash flow statement.  
+
+Your tasks are:  
+1. Parse the CSV and create a structured summary of Operating, Investing, and Financing cash flows for each year.  
+2. Compare year-over-year changes and calculate growth/decline percentages for each major line item.  
+3. Identify anomalies — for example, when Operating Cash Flow is declining while Net Income is increasing, or when Financing inflows/outflows spike suddenly.  
+
+  """
+#   4. Detect whether the company is more dependent on operations, investing activities, or external financing for liquidity.  
+# 5. Generate 3 strategic insights the CFO might present to the board (e.g., “Cash reserves are shrinking despite rising profits — indicating working capital stress”).
 
 due_diligence_test_prompt = """
+file at `D:/Banking-Investment-OS/Backend/Inputs/sample_debt_schedule.csv` is a debt schedule of a company.
 Conduct due diligence on the acquisition target:
 - Review the provided financial statements and contracts
 - Identify key risks and liabilities
@@ -274,7 +286,7 @@ Generate a pitchbook for the M&A transaction:
 
 # Uncomment to test individual agents
 # MA_Analyst_agent.print_response(ma_analyst_test_prompt, stream=True)
-# Due_Diligence_agent.print_response(due_diligence_test_prompt, stream=True)
+Due_Diligence_agent.print_response(due_diligence_test_prompt, stream=True)
 # Valuation_Scenario_agent.print_response(scenario_test_prompt, stream=True)
 # Pitchbook_agent.print_response(pitchbook_test_prompt, stream=True)
 

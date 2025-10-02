@@ -78,27 +78,56 @@ This module contains 4 specialized agents that work together to provide comprehe
 - Sends real-time alerts and auto-creates CRM tasks for follow-up
 - Learns from feedback and outcomes to refine precision
 
-## Tools
+## Tools by Agent
 
-### Built-in Tools
+### 🔹 Dialogue-Agent Tools
+**Built-in Tools:**
 - **KnowledgeTools**: RAG over reports, models, and pitchbooks
 - **FileTools**: CRM integration and conversation logging
 - **PythonTools**: Policy masking and custom algorithms
 - **Mem0Tools**: Secure chat/voice interface for client communications
 - **DuckDbTools**: Client data and conversation storage
-- **PandasTools**: Financial modeling and data analysis
-- **ReasoningTools**: Ranking and scoring algorithms
-- **VisualizationTools**: Performance charts and dashboards
-- **SlackTools**: Notifications and team communication
-- **DuckDuckGoTools**: Market event monitoring and news feeds
 
-### Custom Tools
+**Custom Tools:**
 - **Client Communication Engine**: Secure multi-channel communication platform
+- **Policy Masking System**: Advanced PII and sensitive data redaction
+
+### 🔹 Advisor-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Financial modeling engine and custom algorithms
+- **PandasTools**: Data manipulation for portfolio analysis
+- **ReasoningTools**: Ranking and scoring algorithms
+- **DuckDbTools**: Preference manager and data storage
+- **KnowledgeTools**: Client profile and preference management
+
+**Custom Tools:**
 - **Advisory Framework**: Custom financial advisory and recommendation engine
+- **Benchmarking Engine**: Peer group analysis and comparison tools
+
+### 🔹 Report-Generator-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Document assembly engine (PDF, PPTX, XLSX exports)
+- **VisualizationTools**: Performance charts and risk dashboards
+- **SlackTools**: Scheduling and delivery system
+- **FileTools**: Audit logging and version control
+- **PandasTools**: Data processing and report generation
+
+**Custom Tools:**
 - **Report Assembly Suite**: Automated report generation and customization
+- **Template Management System**: Dynamic report template generation
+
+### 🔹 Opportunity-Detector-Agent Tools
+**Built-in Tools:**
+- **DuckDuckGoTools**: Market event monitoring and news feeds
+- **DuckDbTools**: Client profile database and data storage
+- **PythonTools**: Scoring engine and custom algorithms
+- **FileTools**: CRM integration and task management
+- **KnowledgeTools**: Opportunity matching and analysis
+- **ReasoningTools**: Opportunity evaluation and ranking
+
+**Custom Tools:**
 - **Opportunity Matching Algorithm**: Advanced opportunity detection and scoring
-- **CRM Integration Layer**: Seamless integration with client relationship management
-- **Preference Management System**: Client preference tracking and personalization
+- **Market Intelligence Engine**: Real-time market monitoring and analysis
 
 ## Knowledge Base
 - **Client Profiles**: Comprehensive client information and preferences

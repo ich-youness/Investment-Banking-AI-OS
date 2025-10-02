@@ -82,27 +82,55 @@ This module contains 4 specialized agents that work together to provide comprehe
 - Maintains audit trails of regulatory interpretations
 - Provides compliance reporting and documentation
 
-## Tools
+## Tools by Agent
 
-### Built-in Tools
+### 🔹 KYC-Agent Tools
+**Built-in Tools:**
 - **OpenCVTools**: OCR processing and document analysis
 - **Neo4jTools**: Graph database for ownership mapping
 - **PythonTools**: Risk scoring and ML model integration
 - **FileTools**: Case management and document storage
 - **KnowledgeTools**: Document verification and validation
+
+**Custom Tools:**
+- **KYC Processing Pipeline**: Custom document processing and verification
+- **Beneficial Ownership Mapper**: Complex ownership structure analysis
+
+### 🔹 AML-Agent Tools
+**Built-in Tools:**
 - **DuckDbTools**: Transaction monitoring and data analysis
-- **ReasoningTools**: Risk assessment and pattern analysis
+- **PythonTools**: Machine learning models for anomaly detection
+- **ReasoningTools**: Rule engines for pattern analysis
 - **VisualizationTools**: Investigation dashboards and reporting
 - **PandasTools**: Data analysis and reporting
+
+**Custom Tools:**
+- **AML Detection Engine**: Advanced suspicious activity detection
+- **Pattern Recognition Suite**: Transaction pattern analysis and detection
+
+### 🔹 Sanction-Screener-Agent Tools
+**Built-in Tools:**
+- **DuckDbTools**: Sanction databases and data storage
+- **PythonTools**: Fuzzy matching and alias resolution algorithms
+- **FileTools**: Case escalation and quarantine system
+- **KnowledgeTools**: Logging and audit trail framework
+- **PandasTools**: Data processing and analysis
+
+**Custom Tools:**
+- **Sanction Matching Algorithm**: Fuzzy matching and alias resolution
+- **Database Management System**: Sanction list maintenance and updates
+
+### 🔹 Regulation-Agent Tools
+**Built-in Tools:**
 - **DuckDuckGoTools**: Regulatory feed monitoring
 - **WebsiteTools**: Web scraping for regulatory content
+- **PythonTools**: NLP models for text interpretation
+- **KnowledgeTools**: Policy mapping engine
+- **FileTools**: Alerting system and document management
+- **ReasoningTools**: Legal text analysis and interpretation
 
-### Custom Tools
-- **KYC Processing Pipeline**: Custom document processing and verification
-- **AML Detection Engine**: Advanced suspicious activity detection
-- **Sanction Matching Algorithm**: Fuzzy matching and alias resolution
+**Custom Tools:**
 - **Regulatory Parser**: Custom regulatory text analysis
-- **Risk Scoring Framework**: Custom risk assessment algorithms
 - **Compliance Reporting Suite**: Automated compliance report generation
 
 ## Knowledge Base

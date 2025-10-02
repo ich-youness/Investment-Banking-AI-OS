@@ -78,26 +78,51 @@ This module contains 4 specialized agents that work together to provide end-to-e
 - Provides risk dashboards with metrics and scenario outcomes
 - Highlights key risk exposures and mitigation steps
 
-## Tools
+## Tools by Agent
 
-### Built-in Tools
+### 🔹 Signal-Detection-Agent Tools
+**Built-in Tools:**
 - **YFinanceTools**: Live and historical financial data
-- **PandasTools**: Data manipulation and analysis
-- **DuckDbTools**: SQL queries for financial data
-- **VisualizationTools**: Charts, dashboards, and risk reports
-- **FileTools**: Trade logging and report generation
-- **PythonTools**: Custom algorithms and execution logic
-- **ShellTools**: System integration and testing
-- **CsvTools**: Portfolio data import/export
-- **PostgresTools**: Database operations and storage
+- **PythonTools**: Custom signal detection algorithms and advanced indicators
+- **VisualizationTools**: Plot charts and signals
+- **PandasTools**: Data manipulation for technical analysis
 
-### Custom Tools
+**Custom Tools:**
 - **Technical Analysis Engine**: Custom signal detection algorithms
+- **Multi-timeframe Analyzer**: Cross-timeframe signal correlation
+
+### 🔹 Portfolio-Optimizer-Agent Tools
+**Built-in Tools:**
+- **PandasTools**: Data manipulation for portfolio returns/covariance
+- **PythonTools**: Run optimization models (mean-variance, Sharpe ratio)
+- **VisualizationTools**: Efficient frontier charts
+- **CsvTools**: Import/export of portfolio weights
+
+**Custom Tools:**
 - **Portfolio Optimization Suite**: Advanced optimization algorithms
-- **Risk Management Framework**: Custom risk calculation and monitoring
+- **Risk-Return Analyzer**: Custom risk-return analysis and modeling
+
+### 🔹 Execution-Agent Tools
+**Built-in Tools:**
+- **YFinanceTools**: Fetch real-time prices before execution
+- **PythonTools**: Custom execution logic and broker API integration
+- **ShellTools**: Simulate order execution in testing environments
+- **FileTools**: Log trades and generate reports
+
+**Custom Tools:**
 - **Execution Engine**: Trade execution and order management
-- **Backtesting Framework**: Historical strategy testing and validation
-- **Performance Analytics**: Portfolio performance measurement and attribution
+- **Risk Validation System**: Pre-execution risk checks and validation
+
+### 🔹 Risk-Agent Tools
+**Built-in Tools:**
+- **PandasTools**: Portfolio data analysis
+- **PythonTools**: Compute risk metrics (VaR, CVaR, stress tests)
+- **VisualizationTools**: Risk reports and stress-test charts
+- **CsvTools**: Export reports
+
+**Custom Tools:**
+- **Risk Management Framework**: Custom risk calculation and monitoring
+- **Stress Testing Suite**: Advanced stress testing and scenario analysis
 
 ## Knowledge Base
 - **Trading Strategies**: Proven trading strategies and methodologies

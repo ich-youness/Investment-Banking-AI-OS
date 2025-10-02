@@ -82,28 +82,54 @@ This module contains 4 specialized agents that work together to provide comprehe
 - Allows "what-if" queries to explore alternate outcomes
 - Supports multiple stakeholder needs and requirements
 
-## Tools
+## Tools by Agent
 
-### Built-in Tools
-- **PythonTools**: Policy engine, risk scoring, and custom algorithms
-- **FileTools**: Immutable logging and secure storage
-- **PandasTools**: Data analysis and monitoring metrics
-- **DuckDbTools**: Audit logging and provenance tracking
-- **VisualizationTools**: Monitoring dashboards and audit reports
-- **SlackTools**: Incident management and alerting
-- **ReasoningTools**: Policy evaluation and decision analysis
+### 🔹 Policy-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Policy engine and risk scoring algorithms
+- **FileTools**: Data privacy toolkit and secure storage
+- **ReasoningTools**: Workflow manager and approval logic
+- **DuckDbTools**: Logging and evidence integration
 - **KnowledgeTools**: Policy knowledge base and rule management
-- **Mem0Tools**: Memory management and context tracking
-- **CsvTools**: Audit data export and reporting
-- **DuckDuckGoTools**: External monitoring and threat intelligence
 
-### Custom Tools
+**Custom Tools:**
 - **Policy Engine**: Custom RBAC/ABAC enforcement framework
 - **Data Privacy Toolkit**: Advanced PII masking and tokenization
 - **Workflow Manager**: Approval workflows and exception handling
+
+### 🔹 Monitoring-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Telemetry collectors and anomaly detection models
+- **PandasTools**: Data analysis and monitoring metrics
+- **VisualizationTools**: Dashboards and SLA monitors
+- **FileTools**: Synthetic testing suite and validation
+- **SlackTools**: Incident management integration
+
+**Custom Tools:**
 - **Telemetry Collector**: Custom metrics collection and analysis
 - **Anomaly Detection Suite**: Advanced drift and outlier detection
+
+### 🔹 Audit-Agent Tools
+**Built-in Tools:**
+- **FileTools**: Immutable logging system and secure storage
+- **DuckDbTools**: Provenance tracker and data storage
+- **PythonTools**: Secure storage and audit bundle generation
+- **ReasoningTools**: Workflow correlator and analysis
+- **KnowledgeTools**: E-discovery engine and policy management
+
+**Custom Tools:**
 - **Audit Trail Builder**: Immutable logging and provenance tracking
+- **Regulatory Reporting Suite**: Automated compliance report generation
+
+### 🔹 Explainability-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Model interpretability libraries and algorithms
+- **KnowledgeTools**: Natural language generator and analysis
+- **DuckDbTools**: Feature provenance tracker and data storage
+- **ReasoningTools**: Scenario explorer and analysis
+- **VisualizationTools**: Explanation visualization and reporting
+
+**Custom Tools:**
 - **Explanation Generator**: Natural language decision explanations
 - **Scenario Explorer**: What-if analysis and sensitivity testing
 

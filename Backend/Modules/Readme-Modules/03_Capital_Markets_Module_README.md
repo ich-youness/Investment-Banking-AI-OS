@@ -61,28 +61,42 @@ This module contains 3 specialized agents that work together to provide end-to-e
 - Optimizes allocations to maximize proceeds and investor satisfaction
 - Produces allocation reports for syndicate desks
 
-## Tools
+## Tools by Agent
 
-### Built-in Tools
+### 🔹 Capital-Markets-Agent Tools
+**Built-in Tools:**
 - **PandasTools**: Financial modeling and data manipulation
 - **DuckDbTools**: SQL queries for financial data analysis
 - **YFinanceTools**: Market data and financial indicators
 - **FinancialDatasetsTools**: Macroeconomic and sector data
 - **VisualizationTools**: Charts and dashboards for analysis
 - **FileTools**: Export and report generation
+
+**Custom Tools:**
+- **Deal Structuring Engine**: Custom algorithms for deal design
+- **Pricing Model Framework**: Advanced pricing and valuation models
+
+### 🔹 Investor-Sentiment-Agent Tools
+**Built-in Tools:**
 - **DuckDuckGoTools**: Web search and news monitoring
 - **ExaTools**: Advanced web search and content analysis
 - **KnowledgeTools**: Sentiment analysis and market intelligence
 - **ReasoningTools**: Sentiment interpretation and analysis
-- **PythonTools**: Custom algorithms and modeling
-- **PostgresTools**: Database operations and storage
+- **VisualizationTools**: Trend dashboards and analysis
 
-### Custom Tools
-- **Deal Structuring Engine**: Custom algorithms for deal design
-- **Pricing Model Framework**: Advanced pricing and valuation models
+**Custom Tools:**
 - **Sentiment Analysis Pipeline**: Custom sentiment scoring algorithms
-- **Allocation Optimization Suite**: Advanced allocation algorithms
 - **Market Intelligence Dashboard**: Real-time market monitoring tools
+
+### 🔹 Bookbuilding-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Auction and allocation simulations
+- **PandasTools**: Demand curve modeling
+- **VisualizationTools**: Allocation heatmaps and demand curves
+- **PostgresTools**: Store simulated investor demand datasets
+
+**Custom Tools:**
+- **Allocation Optimization Suite**: Advanced allocation algorithms
 - **Syndicate Management System**: Bookbuilding and allocation management
 
 ## Knowledge Base

@@ -78,25 +78,54 @@ This module contains 4 specialized agents that work together to provide end-to-e
 - Customizes pitchbooks per client, deal, or sector
 - Exports presentations in multiple formats (PowerPoint, PDF)
 
-## Tools
+## Tools by Agent
 
-### Built-in Tools
+### 🔹 M&A-Analyst-Agent Tools
+**Built-in Tools:**
 - **PandasTools**: Financial modeling and data manipulation
 - **DuckDbTools**: SQL queries for financial data analysis
 - **VisualizationTools**: Charts for valuation outputs and analysis
 - **FileTools**: Export valuation models and reports
-- **PythonTools**: Custom financial modeling algorithms
-- **ReasoningTools**: Risk assessment logic and analysis
-- **OpenCVTools**: OCR for document processing integration
-- **FinancialDatasetsTools**: Macroeconomic data for scenario analysis
 
-### Custom Tools
+**Custom Tools:**
 - **DCF Modeling Engine**: Custom discounted cash flow calculations
 - **Comparable Analysis Framework**: Market multiple calculations and analysis
 - **Synergy Calculator**: M&A synergy quantification and modeling
+
+### 🔹 Due-Diligence-Agent Tools
+**Built-in Tools:**
+- **KnowledgeTools**: Legal and financial reasoning
+- **ReasoningTools**: Risk assessment logic and analysis
+- **OpenCVTools**: OCR for document processing integration
+- **PythonTools**: Custom algorithms and integrations
+- **FileTools**: Document ingestion and contract review
+
+**Custom Tools:**
 - **Risk Scoring Algorithm**: Custom risk assessment and scoring models
+- **Document Analysis Pipeline**: Specialized document review and analysis
+
+### 🔹 Valuation-Scenario-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Run scenario simulations
+- **PandasTools**: Data-driven modeling
+- **DuckDbTools**: Query financial datasets
+- **VisualizationTools**: Scenario comparisons
+- **FinancialDatasetsTools**: Macroeconomic data for scenario analysis
+
+**Custom Tools:**
 - **Scenario Modeling Suite**: Monte Carlo and stress testing frameworks
+- **Macroeconomic Modeling**: Economic scenario generation and analysis
+
+### 🔹 Pitchbook-Agent Tools
+**Built-in Tools:**
+- **PythonTools**: Auto-generate slides with charts
+- **VisualizationTools**: Graphs, charts, timelines
+- **KnowledgeTools**: Summarize findings in banker-style narratives
+- **FileTools**: Export presentations as PPTX or PDF
+
+**Custom Tools:**
 - **Pitchbook Generator**: Automated presentation creation and formatting
+- **Template Management System**: Dynamic slide template generation
 
 ## Knowledge Base
 - **Financial Modeling Standards**: Industry-standard valuation methodologies
