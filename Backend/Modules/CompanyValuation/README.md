@@ -1,12 +1,13 @@
 ## Company Valuation Agent
 
-Modern, tool-augmented AI agent that performs corporate valuation using Asset-Based, Market-Based, and Earning-Based approaches. It integrates with Airtable for data, calculates results using deterministic tools, and generates a structured, analyst-grade Markdown report.
+Modern, tool-augmented AI agent that performs corporate valuation using Asset-Based, Market-Based, and Earning-Based approaches. It integrates with Airtable for data, calculates results using deterministic tools, performs peer discovery via semantic search, and generates a structured, analyst-grade Markdown report.
 
 ### Highlights
 - Tool-augmented AI with deterministic financial calculators
 - Airtable-backed data retrieval for companies and statements
 - Clear, auditable formulas with confidence scoring
 - Triangulated valuation across three approaches
+- Semantic peer discovery (similar companies) via ExaTools
 
 ---
 
@@ -33,13 +34,14 @@ flowchart TB
       DR[discount_rates]
     end
 
-    subgraph Tools[Deterministic Tools]
+    subgraph Tools[Deterministic + Discovery Tools]
       BV[Book Value]
       LV[Liquidation Value]
       MC[Market Cap]
       CM[Comparable Multiples]
       DCF[DCF]
       EM[Earnings/Revenue Multiples]
+      EXA[Similar Companies (ExaTools)]
     end
 
     P --> Agent
@@ -47,6 +49,7 @@ flowchart TB
     DIR --> T
     T --> Tools
     Tools -->|needs data| AT
+    EXA -->|semantic web search| Web[(Public Web)]
     AT --> FS & MD & IM & TX & DR
     Tools -->|results| RPT
     RPT -->|Markdown Report| User
@@ -76,6 +79,7 @@ Environment variables:
 - `AIRTABLE_API_KEY`
 - `AIRTABLE_BASE_ID`
 - `XAI_API_KEY` (for the agent LLM model)
+- `EXA_API_KEY` (for ExaTools semantic peer discovery)
 
 ---
 
@@ -101,6 +105,9 @@ Located in `Tools/Calculations.py`.
   - Formula: Value = EBITDA × Multiple and/or Revenue × Multiple
 
 All tools return structured dicts with: `success`, `inputs`, `result`, `confidence`, and `notes`.
+
+4) Peer Discovery (Similarity Search)
+- Similar Companies: uses `ExaTools` to perform semantic search for 5–10 peers based on the analyzed company’s profile (sector, business model, products). Returns names, short rationales, and source links.
 
 ---
 
@@ -136,9 +143,15 @@ flowchart LR
       EB3 --> EB4
     end
 
+    subgraph PEERS[Similar Companies]
+      S1[Construct peer query] --> S2[ExaTools semantic search]
+      S2 --> S3[Filter & rank 5–10 peers]
+    end
+
     AB4 --> RPT[Report]
     MB4 --> RPT
     EB4 --> RPT
+    S3 --> RPT
 ```
 
 ---
@@ -166,6 +179,7 @@ python run_company_valuation.py
 - “Run a Market-Based valuation using EV/EBITDA, P/E, and EV/Sales for GreenFoods Inc. Compare against sector averages.”
 - “Compute a 5-year DCF for AlphaSoft Ltd with WACC=10% and terminal growth=3%. Provide sensitivity to ±2% WACC and ±1% growth.”
 - “Triangulate valuation across all three methods and provide a final range and rationale.”
+- “After the valuation, list 5–10 similar companies with 1-line reasons and links.”
 
 ---
 
@@ -180,6 +194,7 @@ python run_company_valuation.py
 - Deterministic calculators for auditability and repeatability
 - Heuristic confidence scores based on data completeness and method robustness
 - Graceful fallbacks if some fields are missing (e.g., blanket liquidation discount)
+- Peer discovery uses semantic search to complement financial comps when structured comps are scarce
 
 ---
 
@@ -187,6 +202,7 @@ python run_company_valuation.py
 - “No financial statement records available”: Ensure Airtable API key/base ID are set and tables exist
 - DCF errors: Verify `WACC > terminal growth` and non-empty FCF inputs
 - Multiples missing: Ensure `industry_multiples` has EV/EBITDA, P/E, and EV/Sales or pass them explicitly
+- No peers returned: Ensure `EXA_API_KEY` is set and the company prompt includes sector and business description
 
 ---
 

@@ -11,6 +11,7 @@ from agno.tools.python import PythonTools
 from agno.tools.reasoning import ReasoningTools
 from agno.tools.opencv import OpenCVTools
 from agno.tools.calculator import CalculatorTools
+from agno.tools.exa import ExaTools
 from Tools.CompanyValuationDB import *
 from Tools.Calculations import *
 
@@ -24,7 +25,7 @@ from agno.tools.financial_datasets import FinancialDatasetsTools
 agent = Agent(
     name="Financial Data Agent",
     model=xAI(id="grok-3-mini", api_key=os.getenv("XAI_API_KEY")),
-    tools=[get_companies, get_financial_statements, get_market_data, get_transactions, get_discount_rates, get_industry_multiples, calculate_book_value, estimate_liquidation_value, calculate_market_cap, calculate_comparable_multiples, calculate_dcf, calculate_earnings_multiple],
+    tools=[get_companies, get_financial_statements, get_market_data, get_transactions, get_discount_rates, get_industry_multiples, calculate_book_value, estimate_liquidation_value, calculate_market_cap, calculate_comparable_multiples, calculate_dcf, calculate_earnings_multiple, ExaTools()],
     description="You are a financial data specialist that helps analyze financial information for stocks and cryptocurrencies.",
     instructions=dedent("""
          You are the **Financial Data Agent**, an expert AI financial analyst specializing in **corporate and M&A valuations**.
@@ -119,6 +120,7 @@ agent = Agent(
         - Scenario adjustments (High Growth / Moderate / Recession)
         - Explain **how the macro scenario affects valuation assumptions** (discount rate, growth rate, risk premium).
         - Summarize **valuation triangulation**, showing how the three methods compare.
+        - Provide a list of **5–10 similar companies** using the ExaTools semantic search. For each peer, include a one-line rationale and a source link.
 
         ---
 
@@ -183,6 +185,16 @@ agent = Agent(
 
         ---
 
+        ## 🔎 Similar Companies (via ExaTools)
+        List 5–10 closest peers identified via semantic search:
+        - {{peer_1_name}} — {{peer_1_reason}} — {{peer_1_url}}
+        - {{peer_2_name}} — {{peer_2_reason}} — {{peer_2_url}}
+        - {{peer_3_name}} — {{peer_3_reason}} — {{peer_3_url}}
+        - {{peer_4_name}} — {{peer_4_reason}} — {{peer_4_url}}
+        - {{peer_5_name}} — {{peer_5_reason}} — {{peer_5_url}}
+
+        ---
+
         ## 📘 Final Valuation Range
         | Method | Valuation ($) |
         |--------|----------------|
@@ -230,7 +242,7 @@ agent = Agent(
 # the methodology used for each asset category.
 # """)
 # agent.print_response(""" perform an asset-based and market-based and Earning-based valuation for GreenFoods Inc.""")
-agent.print_response(""" perform an asset-based and market-based and Earning-based valuation for AlphaSoft Ltd.""")
+agent.print_response(""" perform an asset-based and market-based and Earning-based valuation for MarocSoft Technologies""")
 # 2. MARKET-BASED VALUATION TESTS
 # agent.print_response("""
 # Perform a Market-Based valuation for GreenFoods Inc. using the Market Cap Calculator.
