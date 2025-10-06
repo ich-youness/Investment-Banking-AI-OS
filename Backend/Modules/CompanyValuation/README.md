@@ -41,7 +41,11 @@ flowchart TB
       CM[Comparable Multiples]
       DCF[DCF]
       EM[Earnings/Revenue Multiples]
-      EXA[Similar Companies (ExaTools)]
+      EXA[Similar Companies]
+    end
+
+    subgraph Web[Public Web]
+      WEB[(Web Data)]
     end
 
     P --> Agent
@@ -49,8 +53,12 @@ flowchart TB
     DIR --> T
     T --> Tools
     Tools -->|needs data| AT
-    EXA -->|semantic web search| Web[(Public Web)]
-    AT --> FS & MD & IM & TX & DR
+    EXA -->|semantic search| WEB
+    AT --> FS
+    AT --> MD
+    AT --> IM
+    AT --> TX
+    AT --> DR
     Tools -->|results| RPT
     RPT -->|Markdown Report| User
 ```
