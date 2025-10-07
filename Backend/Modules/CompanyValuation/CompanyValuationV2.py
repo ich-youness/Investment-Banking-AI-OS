@@ -10,7 +10,7 @@ from agno.tools.calculator import CalculatorTools
 from agno.tools.googlesearch import GoogleSearchTools
 from dotenv import load_dotenv
 from agno.team import Team
-from Tools.CompanyValuationDB import get_companiesV2, get_income_statements, get_balance_sheets, get_valuation_metrics
+from .Tools.CompanyValuationDB import get_companiesV2, get_income_statements, get_balance_sheets, get_valuation_metrics
 import os
 load_dotenv()
 
@@ -193,7 +193,7 @@ async def demonstrate_agents():
     # # Valuation Analyst
     valuation_analyst = financial_agents.create_valuation_analyst()
     # valuation_response = valuation_analyst.run("Value TAQA Morocco Company using EV/EBITDA multiples compared to Nareva Holding and Masen (Moroccan Agency for Sustainable Energy) ")
-    # valuation_analyst.print_response("Value maroc telecom Company using EV/EBITDA multiples compared to other Inwi and Orange companies ")
+    # valuation_analyst.print_response("Value maroc telecom Company using EV/EBITDA multiples compared to other Moroccan companies  ")
     # print(f"\n💰 VALUATION ANALYSIS:\n{valuation_response.content}")
 
 # Moroccan company example as per your documentation

@@ -5,7 +5,8 @@ import {
   Building2,
   TrendingUp,
   DollarSign,
-  Brain
+  Brain,
+  Users
 } from "lucide-react";
 
 const teams = [
@@ -14,6 +15,12 @@ const teams = [
     name: "Company Valuation", 
     icon: Calculator, 
     description: "AI-powered corporate valuation using Asset-Based, Market-Based, and Earning-Based approaches" 
+  },
+  { 
+    id: "company_valuation_v2", 
+    name: "Advanced Company Valuation", 
+    icon: Users, 
+    description: "Multi-agent financial analysis system with specialized analysts for comprehensive company evaluation" 
   }
 ];
 

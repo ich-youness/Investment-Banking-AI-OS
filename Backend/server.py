@@ -10,11 +10,13 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
+
 # Add the current directory to Python path
 sys.path.append(str(Path(__file__).parent))
 
-# Import the Company Valuation agent
+# Import the Company Valuation agents
 from Modules.CompanyValuation.CompanyValuation import agent
+from Modules.CompanyValuation.CompanyValuationV2 import FinancialAnalysisAgents
 
 load_dotenv()
 
@@ -62,10 +64,19 @@ class ResponseModel(BaseModel):
     agent: str
     error: Optional[str] = None
 
-# Initialize the Company Valuation agent
+# Initialize the Company Valuation agents
 api_logger.info("Initializing Banking Investment OS modules...")
 api_logger.info("Setting up Company Valuation Module...")
 agent_logger.info("Creating Financial Data Agent...")
+
+# Initialize CompanyValuationV2 agents
+xai_api_key = os.getenv("XAI_API_KEY")
+if not xai_api_key:
+    api_logger.warning("XAI_API_KEY not found in environment variables. CompanyValuationV2 agents will not be available.")
+    financial_agents = None
+else:
+    financial_agents = FinancialAnalysisAgents(xai_api_key)
+    api_logger.info("CompanyValuationV2 agents initialized successfully")
 
 # Agent mapping for easy access
 AGENTS = {
@@ -73,6 +84,15 @@ AGENTS = {
         "financial_data_agent": agent
     }
 }
+
+# Add CompanyValuationV2 agents if available
+if financial_agents:
+    AGENTS["company_valuation_v2"] = {
+        "income_statement_analyst": financial_agents.create_income_statement_analyst(),
+        "balance_sheet_analyst": financial_agents.create_balance_sheet_analyst(),
+        "valuation_analyst": financial_agents.create_valuation_analyst(),
+        "chief_financial_analyst": financial_agents.create_chief_financial_analyst()
+    }
 
 api_logger.info("All modules initialized successfully!")
 
@@ -177,6 +197,35 @@ async def financial_data_agent_query(request: QueryRequest):
     api_logger.info(f"Financial Data Agent endpoint called - Query: {request.query[:50]}...")
     request.module = "company_valuation"
     request.agent = "financial_data_agent"
+    return await query_agent(request)
+
+# Company Valuation V2 specific endpoints
+@app.post("/company-valuation-v2/income-statement")
+async def income_statement_analyst_query(request: QueryRequest):
+    api_logger.info(f"Income Statement Analyst endpoint called - Query: {request.query[:50]}...")
+    request.module = "company_valuation_v2"
+    request.agent = "income_statement_analyst"
+    return await query_agent(request)
+
+@app.post("/company-valuation-v2/balance-sheet")
+async def balance_sheet_analyst_query(request: QueryRequest):
+    api_logger.info(f"Balance Sheet Analyst endpoint called - Query: {request.query[:50]}...")
+    request.module = "company_valuation_v2"
+    request.agent = "balance_sheet_analyst"
+    return await query_agent(request)
+
+@app.post("/company-valuation-v2/valuation")
+async def valuation_analyst_query(request: QueryRequest):
+    api_logger.info(f"Valuation Analyst endpoint called - Query: {request.query[:50]}...")
+    request.module = "company_valuation_v2"
+    request.agent = "valuation_analyst"
+    return await query_agent(request)
+
+@app.post("/company-valuation-v2/chief-analyst")
+async def chief_financial_analyst_query(request: QueryRequest):
+    api_logger.info(f"Chief Financial Analyst endpoint called - Query: {request.query[:50]}...")
+    request.module = "company_valuation_v2"
+    request.agent = "chief_financial_analyst"
     return await query_agent(request)
 
 @app.get("/images/{filename}")

@@ -73,7 +73,8 @@ const AgentChat = () => {
 
       // Map team IDs to module names for the API
       const moduleMapping: { [key: string]: string } = {
-        'company_valuation': 'company_valuation'
+        'company_valuation': 'company_valuation',
+        'company_valuation_v2': 'company_valuation_v2'
       };
 
       const moduleName = moduleMapping[selectedAgent.teamId];
