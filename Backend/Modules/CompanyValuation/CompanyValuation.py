@@ -1,4 +1,5 @@
 import os
+from sys import exception
 from textwrap import dedent
 from agno.agent import Agent
 from agno.models.xai import xAI
@@ -12,8 +13,10 @@ from agno.tools.reasoning import ReasoningTools
 from agno.tools.opencv import OpenCVTools
 from agno.tools.calculator import CalculatorTools
 from agno.tools.exa import ExaTools
-from Tools.CompanyValuationDB import *
-from Tools.Calculations import *
+
+from .Tools.CompanyValuationDB import *
+from .Tools.Calculations import *
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -242,7 +245,7 @@ agent = Agent(
 # the methodology used for each asset category.
 # """)
 # agent.print_response(""" perform an asset-based and market-based and Earning-based valuation for GreenFoods Inc.""")
-agent.print_response(""" perform an asset-based and market-based and Earning-based valuation for MarocSoft Technologies""")
+# agent.print_response(""" perform an asset-based and market-based and Earning-based valuation for MarocSoft Technologies""")
 # 2. MARKET-BASED VALUATION TESTS
 # agent.print_response("""
 # Perform a Market-Based valuation for GreenFoods Inc. using the Market Cap Calculator.
@@ -304,3 +307,7 @@ agent.print_response(""" perform an asset-based and market-based and Earning-bas
 # the results with broader market benchmarks. Identify key value drivers
 # and sector-specific risks that could impact valuation.
 # """)
+
+# if __name__ == "__main__":
+#     user_input = input("Enter a company name and the valuation approach you want to use: ")
+#     agent.print_response(user_input)

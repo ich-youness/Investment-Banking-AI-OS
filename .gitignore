@@ -2,3 +2,6 @@
 .venv
 Inputs/
 charts/
+__*
+banking-investment-os.log
+.gitignore
