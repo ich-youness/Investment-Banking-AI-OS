@@ -19,6 +19,12 @@ transactions_table = api.table(BASE_ID, "transactions")
 discount_rates_table = api.table(BASE_ID, "discount_rates")
 industry_multiples_table = api.table(BASE_ID, "industry_multiples")
 
+companiesV2_table = api.table(BASE_ID, "companiesV2")
+income_statements_table = api.table(BASE_ID, "income_statements")
+balance_sheets_table = api.table(BASE_ID, "balance_sheets")
+valuation_metrics_table = api.table(BASE_ID, "valuation_metrics")
+
+
 
 def get_companies():
     return companies_table.all()
@@ -39,5 +45,19 @@ def get_industry_multiples():
     return industry_multiples_table.all()
 
 
+def get_companiesV2():
+    """Get all companies from the companiesV2 table"""
+    return companiesV2_table.all()
 
+def get_income_statements():
+    """Get all income statements from the income_statements table"""
+    return income_statements_table.all()
+
+def get_balance_sheets():
+    """Get all balance sheets from the balance_sheets table"""
+    return balance_sheets_table.all()
+
+def get_valuation_metrics():
+    """Get all valuation metrics from the valuation_metrics table"""
+    return valuation_metrics_table.all()
 
