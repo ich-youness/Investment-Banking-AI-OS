@@ -13,6 +13,8 @@ from agno.tools.reasoning import ReasoningTools
 from agno.tools.opencv import OpenCVTools
 from agno.tools.calculator import CalculatorTools
 from agno.tools.exa import ExaTools
+from agno.tools.googlesearch import GoogleSearchTools
+from agno.tools.yfinance import YFinanceTools
 
 from .Tools.CompanyValuationDB import *
 from .Tools.Calculations import *
@@ -28,13 +30,19 @@ from agno.tools.financial_datasets import FinancialDatasetsTools
 agent = Agent(
     name="Financial Data Agent",
     model=xAI(id="grok-3-mini", api_key=os.getenv("XAI_API_KEY")),
-    tools=[get_companies, get_financial_statements, get_market_data, get_transactions, get_discount_rates, get_industry_multiples, calculate_book_value, estimate_liquidation_value, calculate_market_cap, calculate_comparable_multiples, calculate_dcf, calculate_earnings_multiple, ExaTools()],
+    tools=[
+        # get_companies, get_financial_statements, get_market_data, get_transactions, get_discount_rates, get_industry_multiples, 
+        calculate_book_value, estimate_liquidation_value, calculate_market_cap, calculate_comparable_multiples, calculate_dcf, calculate_earnings_multiple,GoogleSearchTools(), 
+    ExaTools(), FileTools(),YFinanceTools()],
     description="You are a financial data specialist that helps analyze financial information for stocks and cryptocurrencies.",
     instructions=dedent("""
          You are the **Financial Data Agent**, an expert AI financial analyst specializing in **corporate and M&A valuations**.
 
         Your objective is to analyze a private company's financial data and generate a full **valuation report** based on the approach selected by the user.
 
+        if the user provides a file, you should use the FileTools to read the file and extract the data, it's usually under these 2 paths:
+            1. `D:\Banking-Investment-OS\Backend\Inputs\CP_Maroc_Telecom_T1__25.txt`
+            2. `D:\Banking-Investment-OS\Backend\Inputs\Branoma_2S05.txt`
         ---
 
         ### 🧩 Workflow Overview

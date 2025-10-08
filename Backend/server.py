@@ -1,7 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 import uvicorn
 import os
 import sys
@@ -17,6 +17,8 @@ sys.path.append(str(Path(__file__).parent))
 # Import the Company Valuation agents
 from Modules.CompanyValuation.CompanyValuation import agent
 from Modules.CompanyValuation.CompanyValuationV2 import FinancialAnalysisAgents
+from Modules.ClientOCR import client_ocr
+from Modules.FallbackOCR import fallback_ocr
 
 load_dotenv()
 
@@ -78,21 +80,46 @@ else:
     financial_agents = FinancialAnalysisAgents(xai_api_key)
     api_logger.info("CompanyValuationV2 agents initialized successfully")
 
+# Initialize OCR client
+def initialize_ocr_client():
+    """Initialize the OCR client if available"""
+    try:
+        # You'll need to import and configure your OCR client here
+        # Example:
+        # from your_ocr_client import Client
+        # client = Client(api_key=os.getenv("OCR_API_KEY"))
+        # client_ocr.set_client(client)
+        # api_logger.info("OCR client initialized successfully")
+        
+        # For now, we'll just log that OCR is not configured
+        api_logger.warning("OCR client not configured. Please set up your OCR client in initialize_ocr_client()")
+        return False
+    except Exception as e:
+        api_logger.error(f"Failed to initialize OCR client: {e}")
+        return False
+
+# Initialize OCR
+ocr_available = initialize_ocr_client()
+
 # Agent mapping for easy access
 AGENTS = {
     "company_valuation": {
-        "financial_data_agent": agent
-    }
-}
-
-# Add CompanyValuationV2 agents if available
-if financial_agents:
-    AGENTS["company_valuation_v2"] = {
+        "financial_data_agent": agent,
         "income_statement_analyst": financial_agents.create_income_statement_analyst(),
         "balance_sheet_analyst": financial_agents.create_balance_sheet_analyst(),
         "valuation_analyst": financial_agents.create_valuation_analyst(),
         "chief_financial_analyst": financial_agents.create_chief_financial_analyst()
     }
+}
+
+# Add CompanyValuationV2 agents if available
+# if financial_agents:
+#     AGENTS["company_valuation_v2"] = {
+#         "income_statement_analyst": financial_agents.create_income_statement_analyst(),
+#         "balance_sheet_analyst": financial_agents.create_balance_sheet_analyst(),
+#         "valuation_analyst": financial_agents.create_valuation_analyst(),
+#         "chief_financial_analyst": financial_agents.create_chief_financial_analyst()
+#     }
 
 api_logger.info("All modules initialized successfully!")
 
@@ -227,6 +254,74 @@ async def chief_financial_analyst_query(request: QueryRequest):
     request.module = "company_valuation_v2"
     request.agent = "chief_financial_analyst"
     return await query_agent(request)
+
+@app.post("/upload")
+async def upload_files(files: List[UploadFile] = File(...)):
+    """Upload files to the Backend/Inputs directory with OCR processing"""
+    try:
+        # Ensure the Inputs directory exists
+        inputs_dir = Path("Inputs")
+        inputs_dir.mkdir(exist_ok=True)
+        
+        uploaded_files = []
+        
+        for file in files:
+            # Create a safe filename
+            safe_filename = file.filename.replace(" ", "_").replace("(", "").replace(")", "")
+            file_path = inputs_dir / safe_filename
+            
+            # Write the file
+            with open(file_path, "wb") as buffer:
+                content = await file.read()
+                buffer.write(content)
+            
+            # Process with OCR if it's a PDF
+            ocr_result = None
+            if file_path.suffix.lower() == '.pdf':
+                if ocr_available:
+                    api_logger.info(f"Processing PDF with advanced OCR: {safe_filename}")
+                    ocr_result = await client_ocr.process_uploaded_file(str(file_path))
+                    
+                    if ocr_result.get('success', False):
+                        api_logger.info(f"Advanced OCR completed successfully for {safe_filename}")
+                    else:
+                        api_logger.warning(f"Advanced OCR failed for {safe_filename}: {ocr_result.get('error', 'Unknown error')}")
+                else:
+                    # Use fallback OCR with pypdf
+                    api_logger.info(f"Processing PDF with fallback OCR (pypdf): {safe_filename}")
+                    ocr_result = fallback_ocr.extract_text_from_pdf(str(file_path))
+                    
+                    if ocr_result.get('success', False):
+                        # Save the extracted text
+                        text_file_path = fallback_ocr.save_extracted_text(str(file_path), ocr_result)
+                        if text_file_path:
+                            ocr_result['metadata']['output_file'] = text_file_path
+                        api_logger.info(f"Fallback OCR completed successfully for {safe_filename}")
+                    else:
+                        api_logger.warning(f"Fallback OCR failed for {safe_filename}: {ocr_result.get('error', 'Unknown error')}")
+            
+            uploaded_files.append({
+                "filename": safe_filename,
+                "original_name": file.filename,
+                "size": len(content),
+                "path": str(file_path),
+                "ocr_success": ocr_result.get('success', False) if ocr_result else None,
+                "extracted_text_length": len(ocr_result.get('text', '')) if ocr_result else 0,
+                "ocr_metadata": ocr_result.get('metadata', {}) if ocr_result else {},
+                "ocr_error": ocr_result.get('error') if ocr_result and not ocr_result.get('success', False) else None
+            })
+            
+            api_logger.info(f"File uploaded: {safe_filename} ({len(content)} bytes)")
+        
+        return {
+            "success": True,
+            "message": f"Successfully uploaded {len(uploaded_files)} file(s) with OCR processing",
+            "files": uploaded_files
+        }
+        
+    except Exception as e:
+        api_logger.error(f"File upload error: {e}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @app.get("/images/{filename}")
 async def get_image(filename: str):

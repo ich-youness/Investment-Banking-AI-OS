@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ChevronLeft, Send, Bot, User, Users, Loader2, ChevronDown } from "lucide-react";
+import { ChevronLeft, Send, Bot, User, Users, Loader2, ChevronDown, Upload, FileText, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { allTeams } from "@/data/Modules";
 import React from "react";
@@ -60,10 +60,88 @@ const AgentChat = () => {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCompanyType, setSelectedCompanyType] = useState<string>('');
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    
+    // Add all files to FormData
+    Array.from(files).forEach((file) => {
+      formData.append('files', file);
+    });
+
+    try {
+      const response = await fetch('http://localhost:8000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Files uploaded successfully:', result);
+        
+        // Add uploaded files to state
+        const newFiles = Array.from(files);
+        setUploadedFiles(prev => [...prev, ...newFiles]);
+        
+        // Show success message with OCR details
+        const ocrDetails = result.files.map((file: any) => {
+          if (file.ocr_success === true) {
+            return `${file.original_name} (${file.extracted_text_length} chars extracted via OCR)`;
+          } else if (file.ocr_success === false) {
+            return `${file.original_name} (OCR failed: ${file.ocr_error || 'Unknown error'})`;
+          } else {
+            return `${file.original_name} (no OCR processing)`;
+          }
+        }).join(', ');
+        
+        const successMessage: Message = {
+          id: Date.now().toString(),
+          content: `✅ Successfully uploaded ${result.files.length} file(s) with OCR processing:\n${ocrDetails}`,
+          sender: 'agent',
+          agentName: 'System',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, successMessage]);
+      } else {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        content: `❌ Failed to upload files: ${error}`,
+        sender: 'agent',
+        agentName: 'System',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileUpload(event.target.files);
+    // Reset the input so the same file can be selected again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   };
   const callBackendAPI = async (prompt: string, agentId: string) => {
     try {
@@ -507,17 +585,27 @@ const AgentChat = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
+    // Add company type context to the message if selected
+    let messageContent = inputMessage;
+    if (selectedCompanyType) {
+      const companyTypeContext = {
+        'listed': 'This is a listed company.',
+        'non-listed-with-data': 'This is a non-listed company but financial data is available.',
+        'non-listed-no-data': 'This is a non-listed company and financial data is not available.'
+      };
+      messageContent = `${companyTypeContext[selectedCompanyType]} ${inputMessage}`;
+    }
+
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: inputMessage,
+      content: inputMessage, // Show original message to user
       sender: 'user',
       timestamp: new Date()
     };
 
-    // Store the message content before clearing the input
-    const messageContent = inputMessage;
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
+    setSelectedCompanyType(''); // Clear selection after sending
     setIsLoading(true);
 
     try {
@@ -742,6 +830,104 @@ const AgentChat = () => {
 
         {/* Input Area */}
         <div className="p-6 border-t border-third-color/20 bg-second-color/50">
+          {/* Upload and Company Type Section */}
+          <div className="mb-4">
+            <div className="flex items-center gap-4 mb-2">
+              {/* Upload Button */}
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  onChange={handleFileSelect}
+                  className="hidden"
+                  accept=".pdf,.xlsx,.xls,.csv,.txt,.doc,.docx"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="text-xs h-8 bg-background border-third-color/20 text-fourth-color hover:bg-third-color/20"
+                >
+                  {isUploading ? (
+                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                  ) : (
+                    <Upload className="h-3 w-3 mr-1" />
+                  )}
+                  Upload Files
+                </Button>
+              </div>
+              
+              {/* Company Type Label */}
+              <p className="text-sm text-fourth-color/70">Company Type:</p>
+            </div>
+            
+            {/* Company Type Buttons */}
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                variant={selectedCompanyType === 'listed' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedCompanyType(selectedCompanyType === 'listed' ? '' : 'listed')}
+                className={`text-xs h-8 ${
+                  selectedCompanyType === 'listed' 
+                    ? 'bg-third-color text-first-color' 
+                    : 'bg-background border-third-color/20 text-fourth-color hover:bg-third-color/20'
+                }`}
+              >
+                Listed Company
+              </Button>
+              <Button
+                variant={selectedCompanyType === 'non-listed-with-data' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedCompanyType(selectedCompanyType === 'non-listed-with-data' ? '' : 'non-listed-with-data')}
+                className={`text-xs h-8 ${
+                  selectedCompanyType === 'non-listed-with-data' 
+                    ? 'bg-third-color text-first-color' 
+                    : 'bg-background border-third-color/20 text-fourth-color hover:bg-third-color/20'
+                }`}
+              >
+                Non-listed (Data Available)
+              </Button>
+              <Button
+                variant={selectedCompanyType === 'non-listed-no-data' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedCompanyType(selectedCompanyType === 'non-listed-no-data' ? '' : 'non-listed-no-data')}
+                className={`text-xs h-8 ${
+                  selectedCompanyType === 'non-listed-no-data' 
+                    ? 'bg-third-color text-first-color' 
+                    : 'bg-background border-third-color/20 text-fourth-color hover:bg-third-color/20'
+                }`}
+              >
+                Non-listed (No Data)
+              </Button>
+            </div>
+          </div>
+
+          {/* Uploaded Files Display */}
+          {uploadedFiles.length > 0 && (
+            <div className="mb-4">
+              <p className="text-sm text-fourth-color/70 mb-2">Uploaded Files:</p>
+              <div className="flex flex-wrap gap-2">
+                {uploadedFiles.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-1 bg-third-color/20 text-fourth-color px-2 py-1 rounded text-xs"
+                  >
+                    <FileText className="h-3 w-3" />
+                    <span className="max-w-32 truncate">{file.name}</span>
+                    <button
+                      onClick={() => removeFile(index)}
+                      className="hover:text-red-400 transition-colors"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <div className="flex gap-3">
             <Input
               value={inputMessage}
