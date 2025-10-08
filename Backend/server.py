@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 import uvicorn
@@ -326,9 +327,45 @@ async def upload_files(files: List[UploadFile] = File(...)):
 @app.get("/images/{filename}")
 async def get_image(filename: str):
     """Serve generated images from the Company Valuation module"""
-    # This would need to be implemented based on where images are stored
-    # For now, return a placeholder
-    return {"message": f"Image {filename} not found. This endpoint needs to be implemented."}
+    try:
+        # Define the charts directory path
+        charts_dir = Path("charts/")
+        
+        # Check if the charts directory exists
+        if not charts_dir.exists():
+            api_logger.error(f"Charts directory not found: {charts_dir}")
+            raise HTTPException(status_code=404, detail="Charts directory not found")
+        
+        # Construct the full file path
+        file_path = charts_dir / filename
+        
+        # Check if the file exists
+        if not file_path.exists():
+            api_logger.warning(f"Image file not found: {filename}")
+            raise HTTPException(status_code=404, detail=f"Image '{filename}' not found")
+        
+        # Check if it's a valid image file
+        valid_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'}
+        if file_path.suffix.lower() not in valid_extensions:
+            api_logger.warning(f"Invalid file type requested: {filename}")
+            raise HTTPException(status_code=400, detail=f"File '{filename}' is not a valid image format")
+        
+        # Log the successful image request
+        api_logger.info(f"Serving image: {filename}")
+        
+        # Return the file using FileResponse
+        return FileResponse(
+            path=str(file_path),
+            media_type=f"image/{file_path.suffix[1:].lower()}",
+            filename=filename
+        )
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions as they are
+        raise
+    except Exception as e:
+        api_logger.error(f"Error serving image '{filename}': {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error serving image: {str(e)}")
 
 # Run the server
 if __name__ == "__main__":

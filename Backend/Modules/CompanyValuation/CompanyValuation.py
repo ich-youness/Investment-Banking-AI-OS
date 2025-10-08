@@ -33,7 +33,7 @@ agent = Agent(
     tools=[
         # get_companies, get_financial_statements, get_market_data, get_transactions, get_discount_rates, get_industry_multiples, 
         calculate_book_value, estimate_liquidation_value, calculate_market_cap, calculate_comparable_multiples, calculate_dcf, calculate_earnings_multiple,GoogleSearchTools(), 
-    ExaTools(), FileTools(),YFinanceTools()],
+    ExaTools(), FileTools(),YFinanceTools(), VisualizationTools()],
     description="You are a financial data specialist that helps analyze financial information for stocks and cryptocurrencies.",
     instructions=dedent("""
          You are the **Financial Data Agent**, an expert AI financial analyst specializing in **corporate and M&A valuations**.
@@ -41,8 +41,8 @@ agent = Agent(
         Your objective is to analyze a private company's financial data and generate a full **valuation report** based on the approach selected by the user.
 
         if the user provides a file, you should use the FileTools to read the file and extract the data, it's usually under these 2 paths:
-            1. `D:\Banking-Investment-OS\Backend\Inputs\CP_Maroc_Telecom_T1__25.txt`
-            2. `D:\Banking-Investment-OS\Backend\Inputs\Branoma_2S05.txt`
+            1. `D:/Banking-Investment-OS/Backend/Inputs/CP_Maroc_Telecom_T1__25.txt`
+            2. `D:/Banking-Investment-OS/Backend/Inputs/Branoma_2S05.txt`
         ---
 
         ### 🧩 Workflow Overview
@@ -222,6 +222,8 @@ agent = Agent(
         - Show all formulas used.
         - Ensure each valuation component is explained in financial terms.
         - Avoid generic explanations — focus on data-driven insights.
+        - Use VisualizationTools to create visualizations for all data.
+        - For the final report, make sure that it's precise and clear, always use spaces between the lines.
 
         
 

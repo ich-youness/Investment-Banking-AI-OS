@@ -9,6 +9,10 @@ import { cn } from "@/lib/utils";
 import { allTeams } from "@/data/Modules";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // for tables, task lists, strikethrough
+import rehypeHighlight from "rehype-highlight"; // for syntax highlighting
+import rehypeRaw from "rehype-raw"; // to render embedded HTML safely (controlled)
+import "highlight.js/styles/github-dark.css"; // syntax theme (pick any)
 
 
 const defaultAgents = [
@@ -290,10 +294,117 @@ const AgentChat = () => {
 
 
   // from gpt: convert markdown to html
+  // const MarkdownRenderer = ({ content }: { content: string }) => {
+  //   return (
+  //     <div className="prose prose-invert max-w-none">
+  //       <ReactMarkdown>{content}</ReactMarkdown>
+  //     </div>
+  //   );
+  // };
   const MarkdownRenderer = ({ content }: { content: string }) => {
     return (
       <div className="prose prose-invert max-w-none">
-        <ReactMarkdown>{content}</ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeHighlight, rehypeRaw]}
+          components={{
+            h1: ({ children }) => (
+              <h1 className="text-2xl font-bold text-blue-300 mt-12 mb-8 leading-tight">
+                {children}
+              </h1>
+            ),
+            h2: ({ children }) => (
+              <h2 className="text-xl font-semibold text-blue-200 mt-10 mb-6 leading-tight">
+                {children}
+              </h2>
+            ),
+            h3: ({ children }) => (
+              <h3 className="text-lg font-medium text-blue-100 mt-8 mb-4 leading-tight">
+                {children}
+              </h3>
+            ),
+            h4: ({ children }) => (
+              <h4 className="text-base font-medium text-blue-50 mt-6 mb-3 leading-tight">
+                {children}
+              </h4>
+            ),
+            h5: ({ children }) => (
+              <h5 className="text-sm font-medium text-blue-50 mt-5 mb-3 leading-tight">
+                {children}
+              </h5>
+            ),
+            h6: ({ children }) => (
+              <h6 className="text-sm font-medium text-blue-50 mt-5 mb-3 leading-tight">
+                {children}
+              </h6>
+            ),
+            code({ className, children, node, ...props }) {
+              const match = /language-(\w+)/.exec(className || "");
+              // @ts-expect-error: 'inline' is not a valid prop, use node.inline
+              const isInline = node && node.inline;
+              if (isInline) {
+                return (
+                  <code
+                    className="bg-gray-800 text-green-400 px-1 py-0.5 rounded"
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                );
+              }
+              return (
+                <pre className="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto my-8">
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                </pre>
+              );
+            },
+            table: ({ children }) => (
+              <div className="overflow-x-auto my-8">
+                <table className="table-auto border-collapse border border-gray-700 w-full text-sm text-gray-300">
+                  {children}
+                </table>
+              </div>
+            ),
+            th: ({ children }) => (
+              <th className="border border-gray-700 px-3 py-2 bg-gray-800 text-gray-100 font-semibold">
+                {children}
+              </th>
+            ),
+            td: ({ children }) => (
+              <td className="border border-gray-700 px-3 py-2">{children}</td>
+            ),
+            ul: ({ children }) => (
+              <ul className="list-disc list-inside space-y-3 my-6">{children}</ul>
+            ),
+            ol: ({ children }) => (
+              <ol className="list-decimal list-inside space-y-3 my-6">{children}</ol>
+            ),
+            li: ({ children }) => (
+              <li className="leading-loose text-gray-200">{children}</li>
+            ),
+            p: ({ children }) => (
+              <p className="my-6 leading-loose text-gray-200">{children}</p>
+            ),
+            blockquote: ({ children }) => (
+              <blockquote className="border-l-4 border-blue-400 pl-4 my-8 italic text-gray-300">
+                {children}
+              </blockquote>
+            ),
+            hr: () => (
+              <hr className="my-12 border-gray-600" />
+            ),
+            strong: ({ children }) => (
+              <strong className="font-semibold text-white">{children}</strong>
+            ),
+            em: ({ children }) => (
+              <em className="italic text-gray-100">{children}</em>
+            ),
+          }}
+        >
+          {content}
+        </ReactMarkdown>
       </div>
     );
   };
@@ -474,94 +585,185 @@ const AgentChat = () => {
     return String(value);
   };
 
+  // function markdownToHTML(markdown: string): string {
+  //   let html = markdown;
+  
+  //   // Fix newlines
+  //   html = html.replace(/\\n/g, "\n");
+  
+  //   // Headings
+  //   html = html.replace(/^###\s?(.+)$/gm, "<h3>$1</h3>");
+  //   html = html.replace(/^##\s?(.+)$/gm, "<h2>$1</h2>");
+  //   html = html.replace(/^#\s?(.+)$/gm, "<h1>$1</h1>");
+  //   html = html.replace(/^\d+\.\s?(.+)$/gm, "<h3>$1</h3>");
+  
+  //   // Bold
+  //   html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  
+  //   // Inline code
+  //   html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+  
+  //        // Code blocks - handle JSON and other code
+  //    html = html.replace(/```json\n([\s\S]*?)```/g, (match, code) => {
+  //      // Clean up escaped quotes and format JSON
+  //      let cleanCode = code.replace(/\\"/g, '"').replace(/\\n/g, '\n');
+  //      try {
+  //        // Try to parse JSON and convert to readable HTML
+  //        const parsed = JSON.parse(cleanCode);
+  //        return convertJsonToHtml(parsed);
+  //      } catch (e) {
+  //        // If parsing fails, just use the cleaned code in a code block
+  //        return `<pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto my-4"><code class="language-json text-sm text-white">${cleanCode}</code></pre>`;
+  //      }
+  //    });
+     
+  //    html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
+  //      // Clean up escaped quotes for non-JSON code blocks
+  //      const cleanCode = code.replace(/\\"/g, '"').replace(/\\n/g, '\n');
+  //      return `<pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto my-4"><code class="text-sm text-white">${cleanCode}</code></pre>`;
+  //    });
+  
+  //   // Lists
+  //   html = html.replace(/^- (.+)$/gm, "<li>$1</li>");
+  //   html = html.replace(/(<li>[\s\S]*?<\/li>)/gm, "<ul>$1</ul>");
+  
+  //   // Horizontal rules
+  //   html = html.replace(/^---$/gm, "<hr />");
+  
+  //        // Standard markdown tables (| column | column |)
+  //    html = html.replace(
+  //      /(\|.+\|\n\|[\s\-:|]+\|\n[\s\S]+?)(?=\n\n|\n[^|]|$)/g,
+  //      (match) => {
+  //        const lines = match.trim().split('\n');
+  //        if (lines.length < 2) return match;
+         
+  //        const headerRow = lines[0];
+  //        const separatorRow = lines[1];
+  //        const bodyRows = lines.slice(2);
+         
+  //        // Parse header
+  //        const headers = headerRow
+  //          .split('|')
+  //          .map(h => h.trim())
+  //          .filter(h => h.length > 0)
+  //          .map(h => `<th class="border border-gray-400 px-2 py-1">${h}</th>`)
+  //          .join('');
+         
+  //        // Parse body rows
+  //        const rows = bodyRows
+  //          .map(row => {
+  //            const cells = row
+  //              .split('|')
+  //              .map(c => c.trim())
+  //              .filter(c => c.length > 0)
+  //              .map(c => `<td class="border border-gray-400 px-2 py-1">${c}</td>`)
+  //              .join('');
+  //            return `<tr>${cells}</tr>`;
+  //          })
+  //          .join('');
+         
+  //        return `<table class="table-auto border-collapse border border-gray-400 my-4 w-full"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
+  //      }
+  //    );
+  
+  //   // Wrap paragraphs
+  //   html = html.replace(/^(?!<h\d>|<ul>|<li>|<pre>|<table>|<hr)(.+)$/gm, "<p>$1</p>");
+  
+  //   return html;
+  // }
+  
   function markdownToHTML(markdown: string): string {
     let html = markdown;
   
-    // Fix newlines
+    // Normalize newlines
     html = html.replace(/\\n/g, "\n");
   
-    // Headings
-    html = html.replace(/^###\s?(.+)$/gm, "<h3>$1</h3>");
-    html = html.replace(/^##\s?(.+)$/gm, "<h2>$1</h2>");
-    html = html.replace(/^#\s?(.+)$/gm, "<h1>$1</h1>");
-    html = html.replace(/^\d+\.\s?(.+)$/gm, "<h3>$1</h3>");
+    // Headings (with added spacing & styling)
+    html = html.replace(/^###\s?(.+)$/gm, '<h3 class="text-lg font-semibold mt-6 mb-3">$1</h3>');
+    html = html.replace(/^##\s?(.+)$/gm, '<h2 class="text-xl font-bold mt-8 mb-4">$1</h2>');
+    html = html.replace(/^#\s?(.+)$/gm, '<h1 class="text-2xl font-extrabold mt-10 mb-5">$1</h1>');
+    html = html.replace(/^\d+\.\s?(.+)$/gm, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>');
   
     // Bold
-    html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold">$1</strong>');
   
     // Inline code
-    html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+    html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-200 text-red-600 rounded px-1 py-0.5 font-mono text-sm">$1</code>');
   
-         // Code blocks - handle JSON and other code
-     html = html.replace(/```json\n([\s\S]*?)```/g, (match, code) => {
-       // Clean up escaped quotes and format JSON
-       let cleanCode = code.replace(/\\"/g, '"').replace(/\\n/g, '\n');
-       try {
-         // Try to parse JSON and convert to readable HTML
-         const parsed = JSON.parse(cleanCode);
-         return convertJsonToHtml(parsed);
-       } catch (e) {
-         // If parsing fails, just use the cleaned code in a code block
-         return `<pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto my-4"><code class="language-json text-sm text-white">${cleanCode}</code></pre>`;
-       }
-     });
-     
-     html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
-       // Clean up escaped quotes for non-JSON code blocks
-       const cleanCode = code.replace(/\\"/g, '"').replace(/\\n/g, '\n');
-       return `<pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto my-4"><code class="text-sm text-white">${cleanCode}</code></pre>`;
-     });
+    // Code blocks (JSON + others)
+    html = html.replace(/```json\n([\s\S]*?)```/g, (match, code) => {
+      let cleanCode = code.replace(/\\"/g, '"').replace(/\\n/g, '\n');
+      try {
+        const parsed = JSON.parse(cleanCode);
+        return convertJsonToHtml(parsed);
+      } catch {
+        return `
+          <pre class="bg-gray-900 text-gray-100 text-sm rounded-lg overflow-x-auto p-4 my-5">
+            <code class="language-json">${cleanCode}</code>
+          </pre>`;
+      }
+    });
+  
+    html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
+      const cleanCode = code.replace(/\\"/g, '"').replace(/\\n/g, '\n');
+      return `
+        <pre class="bg-gray-900 text-gray-100 text-sm rounded-lg overflow-x-auto p-4 my-5">
+          <code>${cleanCode}</code>
+        </pre>`;
+    });
   
     // Lists
-    html = html.replace(/^- (.+)$/gm, "<li>$1</li>");
-    html = html.replace(/(<li>[\s\S]*?<\/li>)/gm, "<ul>$1</ul>");
+    html = html.replace(/^- (.+)$/gm, '<li class="ml-6 mb-1 list-disc">$1</li>');
+    html = html.replace(/(<li[\s\S]*?<\/li>)/gm, '<ul class="list-outside pl-4 my-4">$1</ul>');
   
     // Horizontal rules
-    html = html.replace(/^---$/gm, "<hr />");
+    html = html.replace(/^---$/gm, '<hr class="my-8 border-gray-300"/>');
   
-         // Standard markdown tables (| column | column |)
-     html = html.replace(
-       /(\|.+\|\n\|[\s\-:|]+\|\n[\s\S]+?)(?=\n\n|\n[^|]|$)/g,
-       (match) => {
-         const lines = match.trim().split('\n');
-         if (lines.length < 2) return match;
-         
-         const headerRow = lines[0];
-         const separatorRow = lines[1];
-         const bodyRows = lines.slice(2);
-         
-         // Parse header
-         const headers = headerRow
-           .split('|')
-           .map(h => h.trim())
-           .filter(h => h.length > 0)
-           .map(h => `<th class="border border-gray-400 px-2 py-1">${h}</th>`)
-           .join('');
-         
-         // Parse body rows
-         const rows = bodyRows
-           .map(row => {
-             const cells = row
-               .split('|')
-               .map(c => c.trim())
-               .filter(c => c.length > 0)
-               .map(c => `<td class="border border-gray-400 px-2 py-1">${c}</td>`)
-               .join('');
-             return `<tr>${cells}</tr>`;
-           })
-           .join('');
-         
-         return `<table class="table-auto border-collapse border border-gray-400 my-4 w-full"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
-       }
-     );
+    // Tables
+    html = html.replace(
+      /(\|.+\|\n\|[\s\-:|]+\|\n[\s\S]+?)(?=\n\n|\n[^|]|$)/g,
+      (match) => {
+        const lines = match.trim().split('\n');
+        if (lines.length < 2) return match;
   
-    // Wrap paragraphs
-    html = html.replace(/^(?!<h\d>|<ul>|<li>|<pre>|<table>|<hr)(.+)$/gm, "<p>$1</p>");
+        const headerRow = lines[0];
+        const bodyRows = lines.slice(2);
   
-    return html;
+        const headers = headerRow
+          .split('|')
+          .map(h => h.trim())
+          .filter(Boolean)
+          .map(h => `<th class="border border-gray-300 px-3 py-2  text-left">${h}</th>`)
+          .join('');
+  
+        const rows = bodyRows
+          .map(row => {
+            const cells = row
+              .split('|')
+              .map(c => c.trim())
+              .filter(Boolean)
+              .map(c => `<td class="border border-gray-300 px-3 py-2">${c}</td>`)
+              .join('');
+            return `<tr>${cells}</tr>`;
+          })
+          .join('');
+  
+        return `
+          <div class="overflow-x-auto my-6">
+            <table class="table-auto border-collapse border border-gray-300 w-full text-sm">
+              <thead><tr>${headers}</tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>`;
+      }
+    );
+  
+    // Paragraphs (add spacing between text blocks)
+    html = html.replace(/^(?!<h\d>|<ul>|<li>|<pre>|<table>|<hr)(.+)$/gm, '<p class="my-3 leading-relaxed">$1</p>');
+  
+    return html.trim();
   }
   
-
 
   useEffect(() => {
     scrollToBottom();
