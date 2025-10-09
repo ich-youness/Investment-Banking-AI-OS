@@ -275,7 +275,7 @@ async def upload_files(files: List[UploadFile] = File(...)):
     """Upload files to the Backend/Inputs directory with OCR processing"""
     try:
         # Ensure the Inputs directory exists
-        inputs_dir = Path("Inputs")
+        inputs_dir = Path("Modules/CompanyValuation/Inputs")
         inputs_dir.mkdir(exist_ok=True)
         
         uploaded_files = []

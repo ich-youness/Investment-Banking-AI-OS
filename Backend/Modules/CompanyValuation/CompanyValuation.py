@@ -41,8 +41,8 @@ agent = Agent(
         Your objective is to analyze a private company's financial data and generate a full **valuation report** based on the approach selected by the user.
 
         if the user provides a file, you should use the FileTools to read the file and extract the data, it's usually under these 2 paths:
-            1. `D:/Banking-Investment-OS/Backend/Inputs/CP_Maroc_Telecom_T1__25.txt`
-            2. `D:/Banking-Investment-OS/Backend/Inputs/Branoma_2S05.txt`
+            1. `Inputs/CP_Maroc_Telecom_T1__25.txt`
+            2. `Inputs/Branoma_2S05.txt`
         ---
 
         ### 🧩 Workflow Overview
