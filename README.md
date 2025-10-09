@@ -36,19 +36,19 @@ Banking-Investment-OS/
 ### System Architecture
 ```mermaid
 flowchart LR
-  UI[Frontend (React + Vite + Tailwind)] <--> API[Backend FastAPI/Flask Server]
+  UI[Frontend (React + Vite + Tailwind)] --- API[Backend API Server]
   API --> MOD[Domain Modules]
   subgraph Backend
-    API --> OCR[OCR & Fallback OCR]
+    API --> OCR[OCR and Fallback OCR]
     MOD --> VAL[Company Valuation]
     MOD --> ING[Data Ingestion]
-    MOD --> MNA[M&A / Corp Finance]
+    MOD --> MNA[M and A / Corp Finance]
     MOD --> CAP[Capital Markets]
-    MOD --> TRD[Trading & Asset Mgmt]
-    MOD --> CMP[Compliance & Regulation]
+    MOD --> TRD[Trading and Asset Mgmt]
+    MOD --> CMP[Compliance and Regulation]
     MOD --> GOV[Governance Monitoring]
   end
-  ING --> Files[(Inputs / PDFs / CSVs)]
+  ING --> Files[(Inputs, PDFs, CSVs)]
   VAL --> Charts[(Charts PNGs)]
 ```
 
