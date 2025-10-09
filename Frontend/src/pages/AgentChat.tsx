@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ChevronLeft, Send, Bot, User, Users, Loader2, ChevronDown, Upload, FileText, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, BACKEND_URL } from "@/lib/utils";
 import { allTeams } from "@/data/Modules";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -86,7 +86,7 @@ const AgentChat = () => {
     });
 
     try {
-      const response = await fetch('http://localhost:8000/upload', {
+      const response = await fetch(`${BACKEND_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -174,7 +174,7 @@ const AgentChat = () => {
       console.log('Making API call with:', requestBody);
       console.log('Selected agent:', selectedAgent);
       
-      const response = await fetch('http://localhost:8000/query', {
+      const response = await fetch(`${BACKEND_URL}/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -269,7 +269,7 @@ const AgentChat = () => {
               <span className="text-sm text-fourth-color/70">Generated Visualization</span>
             </div>
             <img
-              src={`http://localhost:8000/images/${encodeURIComponent(filename)}`}
+              src={`${BACKEND_URL}/images/${encodeURIComponent(filename)}`}
               alt={`Generated visualization ${index + 1}`}
               className="max-w-full h-auto rounded border border-third-color/20"
               onError={(e) => {
@@ -279,7 +279,7 @@ const AgentChat = () => {
                 if (timestamp) {
                   const altFilename = `plot_IFRS Capital (central)_${timestamp[1]}.png`;
                   console.log(`Trying alternative filename: ${altFilename}`);
-                  e.currentTarget.src = `http://localhost:8000/images/${encodeURIComponent(altFilename)}`;
+                  e.currentTarget.src = `${BACKEND_URL}/images/${encodeURIComponent(altFilename)}`;
                 } else {
                   e.currentTarget.style.display = 'none';
                 }

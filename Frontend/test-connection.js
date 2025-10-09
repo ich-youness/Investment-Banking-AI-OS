@@ -1,22 +1,32 @@
 // Simple test script to verify frontend-backend connection
 // Run this with: node test-connection.js
+// Optionally set BACKEND_URL env var (e.g., via .env.local with dotenv)
+
+// Lazy-load dotenv if available to support .env files when running via node
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('dotenv').config();
+} catch {}
+
+const BACKEND_URL = (process.env.BACKEND_URL || process.env.PORT || 'http://localhost:8000').replace(/\/$/, '');
 
 const testConnection = async () => {
   try {
     console.log('Testing connection to CIMR-OS Backend...');
+    console.log('Using backend:', BACKEND_URL);
     
     // Test health endpoint
-    const healthResponse = await fetch('http://localhost:8000/health');
+    const healthResponse = await fetch(`${BACKEND_URL}/health`);
     const healthData = await healthResponse.json();
     console.log('✅ Health check:', healthData);
     
     // Test modules endpoint
-    const modulesResponse = await fetch('http://localhost:8000/modules');
+    const modulesResponse = await fetch(`${BACKEND_URL}/modules`);
     const modulesData = await modulesResponse.json();
     console.log('✅ Available modules:', Object.keys(modulesData.modules));
     
     // Test a sample query
-    const queryResponse = await fetch('http://localhost:8000/query', {
+    const queryResponse = await fetch(`${BACKEND_URL}/query`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
