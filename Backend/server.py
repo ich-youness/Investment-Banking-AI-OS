@@ -56,6 +56,7 @@ else:
         "https://investment-banking-ai-os.onrender.com:8080",
         "https://investment-banking-ai-os.onrender.com:10000",
         "https://investment-banking-ai-os.onrender.com:8000",
+        "https://frontend-d712.onrender.com/"
     ]
 
 app.add_middleware(

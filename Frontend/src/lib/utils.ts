@@ -12,5 +12,5 @@ export const BACKEND_URL: string = ((): string => {
     return fromEnv.replace(/\/$/, '');
   }
   // Fallback for local dev
-  return 'http://localhost:8000';
+  return 'http://https://investment-banking-ai-os.onrender.com';
 })();
