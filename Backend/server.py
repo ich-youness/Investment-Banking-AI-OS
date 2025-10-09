@@ -387,7 +387,7 @@ async def get_image(filename: str):
 @app.get("/uploads")
 async def list_uploads(request: Request):
     try:
-        inputs_dir: Path = Path("Inputs")
+        inputs_dir: Path = Path("Modules/CompanyValuation/Inputs")
         inputs_dir.mkdir(exist_ok=True)
 
         files: List[Dict[str, Any]] = []
