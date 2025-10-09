@@ -8,7 +8,7 @@ try {
   require('dotenv').config();
 } catch {}
 
-const BACKEND_URL = (process.env.BACKEND_URL || process.env.PORT || 'http://localhost:8000').replace(/\/$/, '');
+const BACKEND_URL = (process.env.BACKEND_URL || process.env.VITE_BACKEND_URL || 'http://localhost:8000').replace(/\/$/, '');
 
 const testConnection = async () => {
   try {

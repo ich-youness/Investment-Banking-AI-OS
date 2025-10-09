@@ -371,14 +371,15 @@ async def get_image(filename: str):
 # Run the server
 if __name__ == "__main__":
     api_logger.info("Starting Banking Investment OS FastAPI Server...")
-    api_logger.info("Server will be available at: http://localhost:8000")
-    api_logger.info("API Documentation: http://localhost:8000/docs")
-    api_logger.info("Health Check: http://localhost:8000/health")
-    
+    # Determine port from environment (Render provides PORT, default 10000)
+    port = int(os.getenv("PORT", "10000"))
+    api_logger.info(f"Binding on 0.0.0.0:{port}")
+    api_logger.info(f"API docs at: http://localhost:{port}/docs (local) or via service URL on Render")
+
     uvicorn.run(
         "server:app",
         host="0.0.0.0",
-        port=8000,
+        port=port,
         reload=True,
         log_level="info"
     )
