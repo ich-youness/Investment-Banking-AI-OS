@@ -1,0 +1,25 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.23.0
+python-dotenv>=1.0.1
+pydantic>=2.5.0
+python-multipart>=0.0.9
+
+# Data and computation
+pandas>=2.2.2
+duckdb>=1.0.0
+yfinance>=0.2.43
+
+# OCR and file handling
+pypdf>=3.0.0
+aiofiles>=23.2.1
+
+# Airtable integration
+pyairtable>=2.3.5
+
+# Agno agent framework and tools
+agno>=0.7.0
+exa-py>=1.0.9
+opencv-python>=4.9.0.80
+
+# Utilities
+requests>=2.32.0
