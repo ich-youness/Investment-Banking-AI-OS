@@ -331,6 +331,7 @@ async def get_image(filename: str):
         # Define the charts directory path
         charts_dir = Path("charts/")
         
+        
         # Check if the charts directory exists
         if not charts_dir.exists():
             api_logger.error(f"Charts directory not found: {charts_dir}")
