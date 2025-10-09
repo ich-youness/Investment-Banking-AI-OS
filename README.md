@@ -83,22 +83,7 @@ npm run dev
 
 Open the app: http://localhost:5173 (default Vite dev server)
 
-### Git Workflow (suggested)
-```mermaid
-gitGraph
-  commit id: "init"
-  branch dev
-  checkout dev
-  commit id: "modules"
-  branch feature/ui
-  checkout feature/ui
-  commit id: "ui-components"
-  checkout dev
-  merge feature/ui
-  commit id: "api-integration"
-  checkout main
-  merge dev tag: "v0.1.0"
-```
+
 
 ### Notable Backend Entry Points
 - `Backend/server.py`: Main server with endpoints integrating modules and OCR
