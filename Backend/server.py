@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
@@ -9,6 +9,7 @@ import sys
 import logging
 from datetime import datetime
 from pathlib import Path
+import mimetypes
 from dotenv import load_dotenv
 
 
@@ -381,6 +382,47 @@ async def get_image(filename: str):
     except Exception as e:
         api_logger.error(f"Error serving image '{filename}': {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error serving image: {str(e)}")
+
+# List uploaded files in Inputs directory
+@app.get("/uploads")
+async def list_uploads(request: Request):
+    try:
+        inputs_dir: Path = Path("Inputs")
+        inputs_dir.mkdir(exist_ok=True)
+
+        files: List[Dict[str, Any]] = []
+        for path in inputs_dir.iterdir():
+            if path.is_file():
+                stat = path.stat()
+                files.append({
+                    "filename": path.name,
+                    "size": stat.st_size,
+                    "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                    "url": str(request.base_url) + f"uploads/{path.name}"
+                })
+        return {"success": True, "count": len(files), "files": files}
+    except Exception as e:
+        api_logger.error(f"Error listing uploads: {e}")
+        raise HTTPException(status_code=500, detail=f"Error listing uploads: {str(e)}")
+
+# Serve an uploaded file from Inputs directory
+@app.get("/uploads/{filename}")
+async def get_upload(filename: str):
+    try:
+        # prevent path traversal
+        safe_name = filename.replace("..", "").replace("/", "").replace("\\", "")
+        file_path = Path("Inputs") / safe_name
+        if not file_path.exists() or not file_path.is_file():
+            raise HTTPException(status_code=404, detail="File not found")
+
+        guessed_type, _ = mimetypes.guess_type(str(file_path))
+        media_type = guessed_type or "application/octet-stream"
+        return FileResponse(path=str(file_path), media_type=media_type, filename=safe_name)
+    except HTTPException:
+        raise
+    except Exception as e:
+        api_logger.error(f"Error serving upload '{filename}': {e}")
+        raise HTTPException(status_code=500, detail=f"Error serving upload: {str(e)}")
 
 # Run the server
 if __name__ == "__main__":

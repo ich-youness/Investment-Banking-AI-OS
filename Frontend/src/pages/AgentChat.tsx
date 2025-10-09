@@ -66,6 +66,7 @@ const AgentChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCompanyType, setSelectedCompanyType] = useState<string>('');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedServerFiles, setUploadedServerFiles] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -98,6 +99,13 @@ const AgentChat = () => {
         // Add uploaded files to state
         const newFiles = Array.from(files);
         setUploadedFiles(prev => [...prev, ...newFiles]);
+        // Track server-side stored filenames for later agent calls
+        try {
+          const serverNames = Array.isArray(result?.files) ? result.files.map((f: any) => f.filename).filter(Boolean) : [];
+          if (serverNames.length > 0) {
+            setUploadedServerFiles(prev => [...prev, ...serverNames]);
+          }
+        } catch {}
         
         // Show success message with OCR details
         const ocrDetails = result.files.map((file: any) => {
@@ -168,7 +176,10 @@ const AgentChat = () => {
         query: prompt,
         module: moduleName,
         agent: agentId,
-        custom_data: {}
+        custom_data: {
+          // Files saved on the backend under `Inputs/` directory
+          uploaded_files: uploadedServerFiles
+        }
       };
       
       console.log('Making API call with:', requestBody);
