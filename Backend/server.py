@@ -44,10 +44,23 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add CORS middleware
+# Add CORS middleware (configurable via env CORS_ALLOW_ORIGINS as comma-separated list)
+cors_origins_env = os.getenv("CORS_ALLOW_ORIGINS", "")
+if cors_origins_env.strip():
+    allow_origins = [origin.strip() for origin in cors_origins_env.split(",") if origin.strip()]
+else:
+    allow_origins = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "https://investment-banking-ai-os.onrender.com:8080",
+        "https://investment-banking-ai-os.onrender.com:10000",
+        "https://investment-banking-ai-os.onrender.com:8000",
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:8080"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
