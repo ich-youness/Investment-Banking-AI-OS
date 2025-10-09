@@ -27,3 +27,4 @@ requests>=2.32.0
 googlesearch-python
 pycountry
 matplotlib
+sqlalchemy
