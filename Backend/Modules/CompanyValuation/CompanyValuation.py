@@ -15,6 +15,7 @@ from agno.tools.calculator import CalculatorTools
 from agno.tools.exa import ExaTools
 from agno.tools.googlesearch import GoogleSearchTools
 from agno.tools.yfinance import YFinanceTools
+from agno.db.sqlite import SqliteDb
 
 from .Tools.CompanyValuationDB import *
 from .Tools.Calculations import *
@@ -26,10 +27,13 @@ load_dotenv()
 
 from agno.agent import Agent
 from agno.tools.financial_datasets import FinancialDatasetsTools
+db = SqliteDb(db_file="tmp/agno.db")
 
 agent = Agent(
     name="Financial Data Agent",
     model=xAI(id="grok-3-mini", api_key=os.getenv("XAI_API_KEY")),
+    db=db,
+    enable_agentic_memory=True, 
     tools=[
         # get_companies, get_financial_statements, get_market_data, get_transactions, get_discount_rates, get_industry_multiples, 
         calculate_book_value, estimate_liquidation_value, calculate_market_cap, calculate_comparable_multiples, calculate_dcf, calculate_earnings_multiple,GoogleSearchTools(), 
