@@ -16,12 +16,12 @@ const teams = [
     icon: Calculator, 
     description: "AI-powered corporate valuation using Asset-Based, Market-Based, and Earning-Based approaches" 
   },
-  { 
-    id: "company_valuation_v2", 
-    name: "Advanced Company Valuation", 
-    icon: Users, 
-    description: "Multi-agent financial analysis system with specialized analysts for comprehensive company evaluation" 
-  }
+  // { 
+  //   id: "company_valuation_v2", 
+  //   name: "Advanced Company Valuation", 
+  //   icon: Users, 
+  //   description: "Multi-agent financial analysis system with specialized analysts for comprehensive company evaluation" 
+  // }
 ];
 
 const Landing = () => {

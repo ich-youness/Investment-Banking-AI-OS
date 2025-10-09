@@ -158,89 +158,89 @@ export const companyValuationTeam: Team = {
 // };
 
 // Company Valuation V2 Module (Multi-Agent System)
-export const companyValuationV2Team: Team = {
-  id: "company_valuation_v2",
-  name: "Advanced Company Valuation",
-  description: "Multi-agent financial analysis system with specialized analysts for comprehensive company evaluation",
-  icon: Users,
-  subTeams: [
-    {
-      id: "financial-analysis-team",
-      name: "Financial Analysis Team",
-      description: "Specialized financial analysts working together for comprehensive company evaluation",
-      mode: "Coordinate",
-      icon: Users,
-      agents: [
-        {
-          id: "income_statement_analyst",
-          name: "Income Statement Analyst",
-          description: "Specialized in analyzing revenue growth trends, calculating key margins (gross, operating, net), analyzing EBITDA and operating performance, and identifying trends in profitability and operational efficiency.",
-          icon: TrendingUp,
-          outputs: [
-            "Revenue Growth Analysis",
-            "Margin Analysis (Gross, Operating, Net)",
-            "EBITDA Performance Assessment",
-            "Profitability Trend Analysis",
-            "Cost Structure Evaluation",
-            "Quarter-over-Quarter Analysis",
-            "Year-over-Year Comparisons",
-            "Industry Benchmarking"
-          ]
-        },
-        {
-          id: "balance_sheet_analyst",
-          name: "Balance Sheet Analyst",
-          description: "Expert in analyzing capital structure, assessing liquidity position, evaluating financial health, and analyzing asset quality and composition for solvency and financial stability assessment.",
-          icon: BarChart3,
-          outputs: [
-            "Capital Structure Analysis",
-            "Debt-to-Equity Ratios",
-            "Liquidity Position Assessment",
-            "Current & Quick Ratios",
-            "Financial Health Evaluation",
-            "Asset Quality Analysis",
-            "Working Capital Analysis",
-            "Solvency Assessment"
-          ]
-        },
-        {
-          id: "valuation_analyst",
-          name: "Valuation Analyst",
-          description: "Specialized in valuation by multiples, calculating Enterprise Value, applying appropriate industry multiples, performing comparable company analysis, and providing valuation ranges with sensitivity analysis.",
-          icon: DollarSign,
-          outputs: [
-            "Enterprise Value Calculations",
-            "Multiples Analysis (EV/Revenue, EV/EBITDA, P/E, P/B)",
-            "Comparable Company Analysis",
-            "Industry Benchmarking",
-            "Valuation Range Estimates",
-            "Sensitivity Analysis",
-            "Fair Value Assessment",
-            "Investment Recommendations"
-          ]
-        },
-        {
-          id: "chief_financial_analyst",
-          name: "Chief Financial Analyst",
-          description: "Master coordinator that synthesizes findings from all specialist agents, provides comprehensive company valuation and investment recommendations, and identifies interconnections between different analysis domains.",
-          icon: Brain,
-          outputs: [
-            "Integrated Financial Analysis",
-            "Comprehensive Valuation Reports",
-            "Investment Recommendations",
-            "Risk Assessment",
-            "Opportunity Identification",
-            "Cross-Domain Insights",
-            "Executive Summary",
-            "Strategic Recommendations"
-          ]
-        }
-      ]
-    }
-  ]
-};
+// export const companyValuationV2Team: Team = {
+//   id: "company_valuation_v2",
+//   name: "Advanced Company Valuation",
+//   description: "Multi-agent financial analysis system with specialized analysts for comprehensive company evaluation",
+//   icon: Users,
+//   subTeams: [
+//     {
+//       id: "financial-analysis-team",
+//       name: "Financial Analysis Team",
+//       description: "Specialized financial analysts working together for comprehensive company evaluation",
+//       mode: "Coordinate",
+//       icon: Users,
+//       agents: [
+//         {
+//           id: "income_statement_analyst",
+//           name: "Income Statement Analyst",
+//           description: "Specialized in analyzing revenue growth trends, calculating key margins (gross, operating, net), analyzing EBITDA and operating performance, and identifying trends in profitability and operational efficiency.",
+//           icon: TrendingUp,
+//           outputs: [
+//             "Revenue Growth Analysis",
+//             "Margin Analysis (Gross, Operating, Net)",
+//             "EBITDA Performance Assessment",
+//             "Profitability Trend Analysis",
+//             "Cost Structure Evaluation",
+//             "Quarter-over-Quarter Analysis",
+//             "Year-over-Year Comparisons",
+//             "Industry Benchmarking"
+//           ]
+//         },
+//         {
+//           id: "balance_sheet_analyst",
+//           name: "Balance Sheet Analyst",
+//           description: "Expert in analyzing capital structure, assessing liquidity position, evaluating financial health, and analyzing asset quality and composition for solvency and financial stability assessment.",
+//           icon: BarChart3,
+//           outputs: [
+//             "Capital Structure Analysis",
+//             "Debt-to-Equity Ratios",
+//             "Liquidity Position Assessment",
+//             "Current & Quick Ratios",
+//             "Financial Health Evaluation",
+//             "Asset Quality Analysis",
+//             "Working Capital Analysis",
+//             "Solvency Assessment"
+//           ]
+//         },
+//         {
+//           id: "valuation_analyst",
+//           name: "Valuation Analyst",
+//           description: "Specialized in valuation by multiples, calculating Enterprise Value, applying appropriate industry multiples, performing comparable company analysis, and providing valuation ranges with sensitivity analysis.",
+//           icon: DollarSign,
+//           outputs: [
+//             "Enterprise Value Calculations",
+//             "Multiples Analysis (EV/Revenue, EV/EBITDA, P/E, P/B)",
+//             "Comparable Company Analysis",
+//             "Industry Benchmarking",
+//             "Valuation Range Estimates",
+//             "Sensitivity Analysis",
+//             "Fair Value Assessment",
+//             "Investment Recommendations"
+//           ]
+//         },
+//         {
+//           id: "chief_financial_analyst",
+//           name: "Chief Financial Analyst",
+//           description: "Master coordinator that synthesizes findings from all specialist agents, provides comprehensive company valuation and investment recommendations, and identifies interconnections between different analysis domains.",
+//           icon: Brain,
+//           outputs: [
+//             "Integrated Financial Analysis",
+//             "Comprehensive Valuation Reports",
+//             "Investment Recommendations",
+//             "Risk Assessment",
+//             "Opportunity Identification",
+//             "Cross-Domain Insights",
+//             "Executive Summary",
+//             "Strategic Recommendations"
+//           ]
+//         }
+//       ]
+//     }
+//   ]
+// };
 
 export const allTeams = [
   companyValuationTeam,
-  companyValuationV2Team
+  // companyValuationV2Team
 ];
