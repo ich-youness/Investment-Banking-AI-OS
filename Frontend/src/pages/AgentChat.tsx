@@ -66,7 +66,8 @@ const AgentChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCompanyType, setSelectedCompanyType] = useState<string>('');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [uploadedServerFiles, setUploadedServerFiles] = useState<string[]>([]);
+  type UploadedServerFile = { filename: string; path?: string; textPath?: string };
+  const [uploadedServerFiles, setUploadedServerFiles] = useState<UploadedServerFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -101,9 +102,16 @@ const AgentChat = () => {
         setUploadedFiles(prev => [...prev, ...newFiles]);
         // Track server-side stored filenames for later agent calls
         try {
-          const serverNames = Array.isArray(result?.files) ? result.files.map((f: any) => f.filename).filter(Boolean) : [];
-          if (serverNames.length > 0) {
-            setUploadedServerFiles(prev => [...prev, ...serverNames]);
+          const entries = Array.isArray(result?.files)
+            ? result.files.map((f: any) => ({
+                filename: f?.filename,
+                path: f?.path,
+                textPath: f?.ocr_metadata?.output_file
+              }))
+              .filter((e: any) => e.filename)
+            : [];
+          if (entries.length > 0) {
+            setUploadedServerFiles(prev => [...prev, ...entries]);
           }
         } catch {}
         
@@ -177,8 +185,10 @@ const AgentChat = () => {
         module: moduleName,
         agent: agentId,
         custom_data: {
-          // Files saved on the backend under `Inputs/` directory
-          uploaded_files: uploadedServerFiles
+          // Files saved on the backend; provide multiple hints
+          uploaded_files: uploadedServerFiles.map(f => f.filename),
+          uploaded_file_paths: uploadedServerFiles.map(f => f.path).filter(Boolean),
+          uploaded_text_paths: uploadedServerFiles.map(f => f.textPath).filter(Boolean)
         }
       };
       

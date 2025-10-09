@@ -188,11 +188,32 @@ async def query_agent(request: QueryRequest):
         agent_instance = AGENTS[request.module][request.agent]
         agent_logger.info(f"[{request_id}] Agent retrieved successfully: {agent_instance.name}")
         
+        # Build augmented query context with uploaded files if provided
+        augmented_query = request.query
+        file_hints: List[str] = []
+        try:
+            cd = request.custom_data or {}
+            # Prefer explicit paths from frontend if provided
+            for p in cd.get("uploaded_text_paths", []) or []:
+                file_hints.append(str(p))
+            for p in cd.get("uploaded_file_paths", []) or []:
+                file_hints.append(str(p))
+            # Also allow simple filenames; assume they live under the uploads dir
+            for name in cd.get("uploaded_files", []) or []:
+                file_hints.append(str(Path("Modules/CompanyValuation/Inputs") / name))
+        except Exception:
+            pass
+
+        if file_hints:
+            agent_logger.info(f"[{request_id}] Augmenting query with {len(file_hints)} uploaded file hint(s)")
+            hint_text = "\n\nUploaded files available on server (absolute/relative paths):\n" + "\n".join(f"- {p}" for p in file_hints)
+            augmented_query = f"{request.query}{hint_text}"
+
         # Execute the query
         agent_logger.info(f"[{request_id}] Executing agent query...")
         execution_start = datetime.now()
         
-        response = agent_instance.run(request.query)
+        response = agent_instance.run(augmented_query)
         response_content = response.content if hasattr(response, 'content') else str(response)
         
         execution_time = (datetime.now() - execution_start).total_seconds()
@@ -411,7 +432,8 @@ async def get_upload(filename: str):
     try:
         # prevent path traversal
         safe_name = filename.replace("..", "").replace("/", "").replace("\\", "")
-        file_path = Path("Inputs") / safe_name
+        # Serve from the same directory used for uploads
+        file_path = Path("Modules/CompanyValuation/Inputs") / safe_name
         if not file_path.exists() or not file_path.is_file():
             raise HTTPException(status_code=404, detail="File not found")
 
